@@ -1,17 +1,30 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import ServicesHero from "@/components/services/ServicesHero";
 import ServicesGrid from "@/components/services/ServicesGrid";
-import ServicesNav from "@/components/services/ServicesNav"; // Keeping for now to check if user wants it, but plan to remove or hide. Actually, user asked for Left Tab. Left Tab usually replaces Nav Cards. I will exclude it for now.
+// ServicesNav is removed as requested "Left hand side tab" replaces the need for this navigation
 
 export default function ServicesMain() {
+    const searchParams = useSearchParams();
     const [activeTab, setActiveTab] = useState("sales-audit");
+
+    useEffect(() => {
+        const tab = searchParams.get("tab");
+        if (tab) {
+            setActiveTab(tab);
+            // Scroll to grid if tab is present in URL
+            setTimeout(() => {
+                scrollToTabs();
+            }, 100);
+        }
+    }, [searchParams]);
 
     const scrollToTabs = () => {
         const element = document.getElementById("services-tabs");
         if (element) {
-            const offset = 80;
+            const offset = 100;
             const elementPosition = element.getBoundingClientRect().top;
             const offsetPosition = elementPosition + window.pageYOffset - offset;
             window.scrollTo({
@@ -23,13 +36,12 @@ export default function ServicesMain() {
 
     const handleTabChange = (id) => {
         setActiveTab(id);
-        scrollToTabs(); // Optional: scroll to tabs when clicking hero buttons
+        scrollToTabs();
     };
 
     return (
         <>
             <ServicesHero activeTab={activeTab} setActiveTab={handleTabChange} />
-            {/* ServicesNav is removed as requested "Left hand side tab" replaces the need for this navigation */}
             <div id="services-tabs">
                 <ServicesGrid activeTab={activeTab} setActiveTab={setActiveTab} />
             </div>

@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { Menu, Sparkles } from "lucide-react";
+import { Menu, Sparkles, ChevronDown } from "lucide-react";
 import NavbarDrawer from "./NavbarDrawer";
 
 export default function Navbar() {
@@ -121,6 +121,47 @@ export default function Navbar() {
             <div className="hidden md:flex items-center gap-8">
               {navLinks.map((link, index) => {
                 const isActive = pathname === link.href || (link.href !== '/' && pathname.startsWith(link.href));
+                const isServices = link.label === "Services";
+
+                if (isServices) {
+                  return (
+                    <div key={link.href} className="relative group">
+                      <Link
+                        href={link.href}
+                        className={`
+                            relative text-sm font-semibold flex items-center gap-1
+                            transition-all duration-300
+                            group-hover:text-blue-600
+                            ${isActive ? 'text-blue-700' : 'text-slate-700'}
+                          `}
+                      >
+                        {link.label}
+                        <ChevronDown size={14} className="group-hover:rotate-180 transition-transform duration-300" />
+                        <div className="absolute -bottom-2 left-0 right-0 h-0.5 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></div>
+                      </Link>
+
+                      {/* Dropdown Menu */}
+                      <div className="absolute top-full left-0 w-64 pt-4 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 -translate-y-2 group-hover:translate-y-0 z-50">
+                        <div className="bg-white rounded-xl shadow-xl border border-blue-100 p-2 overflow-hidden">
+                          {[
+                            { label: "Sales & Marketing Audit", href: "/services?tab=sales-audit" },
+                            { label: "Lead Gen & Qualification", href: "/services?tab=bot-model" },
+                            { label: "Outsourced Sales", href: "/services?tab=outsourced-model" },
+                            { label: "Franchise Expansion", href: "/franchise-expansion" }
+                          ].map((item, i) => (
+                            <Link
+                              key={i}
+                              href={item.href}
+                              className="block px-4 py-3 rounded-lg text-sm text-slate-600 hover:text-blue-700 hover:bg-blue-50 transition-colors font-medium"
+                            >
+                              {item.label}
+                            </Link>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                }
 
                 return (
                   <Link
@@ -159,7 +200,7 @@ export default function Navbar() {
                       )}
 
                       {/* Active dot */}
-                      {isActive && (
+                      {isActive && link.label !== "Franchise" && (
                         <span className="absolute -top-1 -right-1 w-1.5 h-1.5 bg-blue-500 rounded-full">
                           <span className="absolute inset-0 w-full h-full bg-blue-500 rounded-full animate-ping opacity-75"></span>
                         </span>
