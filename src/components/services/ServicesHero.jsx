@@ -2,27 +2,12 @@
 
 import { Sparkles, ArrowRight, Target, Users, TrendingUp, Search } from "lucide-react";
 
-export default function ServicesHero() {
+export default function ServicesHero({ activeTab, setActiveTab }) {
   const highlights = [
-    { icon: Search, text: "Sales Audit", gradient: "from-orange-500 to-red-500" },
-    { icon: Target, text: "BOT Model", gradient: "from-blue-500 to-cyan-500" },
-    { icon: Users, text: "Outsourced Sales", gradient: "from-purple-500 to-indigo-500" }
+    { icon: Search, text: "Sales Audit", id: "sales-audit", gradient: "from-orange-500 to-red-500" },
+    { icon: Target, text: "BOT Model", id: "bot-model", gradient: "from-blue-500 to-cyan-500" },
+    { icon: Users, text: "Outsourced Sales", id: "outsourced-model", gradient: "from-purple-500 to-indigo-500" }
   ];
-
-  const scrollToService = (idx) => {
-    const serviceIds = ["sales-audit", "bot-model", "outsourced-model"];
-    const element = document.getElementById(serviceIds[idx]);
-    if (element) {
-      const offset = 100;
-      const elementPosition = element.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.pageYOffset - offset;
-
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth'
-      });
-    }
-  };
 
   return (
     <section className="relative py-20 bg-gradient-to-br from-white via-blue-50/40 to-cyan-50/40 overflow-hidden">
@@ -76,7 +61,7 @@ export default function ServicesHero() {
             return (
               <button
                 key={idx}
-                onClick={() => scrollToService(idx)}
+                onClick={() => setActiveTab(item.id)}
                 className="group inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/80 backdrop-blur-sm border border-blue-200/40 shadow-sm hover:shadow-lg hover:shadow-blue-500/10 hover:-translate-y-1 transition-all duration-300 cursor-pointer"
               >
                 <div className={`w-8 h-8 rounded-lg bg-gradient-to-br ${item.gradient} flex items-center justify-center group-hover:scale-110 group-hover:rotate-6 transition-all duration-300`}>
